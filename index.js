@@ -77,14 +77,12 @@ const syncSubscription = (sub) => {
 
             if (!items.length) return void resolve();
 
-            const newLastItemId  = items[0].id;
-            console.log('Last Item ID =', newLastItemId); 
-            console.log('Previously saved Last Item ID =', lastItemId); 
+            const itemsToSend = ((lastItemId && !isFirstSync) ? items.reverse() : [items[0]]);
+
+            const newLastItemId  = itemsToSend[itemsToSend.length - 1].id;
             if (!lastItemId || newLastItemId > lastItemId) {
                 db.set(`last_item_id_${sub.id}`, newLastItemId);
             }
-
-            const itemsToSend = ((lastItemId && !isFirstSync) ? items.reverse() : [items[0]]);
 
             for (let item of itemsToSend) {
                 let embed = new Discord.MessageEmbed()
