@@ -69,6 +69,7 @@ const syncSubscription = (sub) => {
             }
             const isFirstSync = db.get('is_first_sync');
             const lastItemTimestamp = db.get(`last_item_ts_${sub.id}`);
+            console.log(Vinted responded w/ ${res.items.lengths} search results:, res.items.map(el => el.title));
             const items = res.items
                 .sort((a, b) => new Date(b.created_at_ts).getTime() - new Date(a.created_at_ts).getTime())
                 .filter((item) => !lastItemTimestamp || new Date(item.created_at_ts) > lastItemTimestamp);
@@ -147,19 +148,7 @@ client.on('ready', () => {
     });
     db.set('is_first_sync', true);
 
-    const messages = [
-        `🕊️ Ce projet libre et gratuit demande du temps. Si vous en avez les moyens, n'hésitez pas à soutenir le développement avec un don ! https://paypal.me/andr0z\n`,
-        `🤟 Le saviez-vous ? Nous proposons notre propre version du bot en ligne 24/24 7/7 sans que vous n'ayez besoin de vous soucier de quoi que ce soit ! https://distrobot.fr\n`
-    ];
-    let idx = 0;
-    const donate = () => console.log(messages[ idx % 2 ]);
-    setTimeout(() => {
-        donate();
-    }, 3000);
-    setInterval(() => {
-        idx++;
-        donate();
-    }, 20000);
+   
 
     sync();
     setInterval(sync, 15000);
