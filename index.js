@@ -69,7 +69,8 @@ const syncSubscription = (sub) => {
             }
             const isFirstSync = db.get('is_first_sync');
             const lastItemId = db.get(`last_item_id_${sub.id}`);
-            console.log(sub.url,`Vinted responded w/ ${res.items.length} search results:`, res.items.map(el => el.title));
+            console.log(sub.url,`Vinted responded w/ ${res.items.length} search results:`);
+            console.log('items id', res.items.map(el => el.id)); 
             const items = res.items
                 .sort((i1, i2) => i1.id - i2.id)
                 .filter((item) => !lastItemId || item.id > lastItemId);
@@ -77,6 +78,8 @@ const syncSubscription = (sub) => {
             if (!items.length) return void resolve();
 
             const newLastItemId  = items[0].id;
+            console.log('Last Item ID =', newLastItemId); 
+            console.log('Previously saved Last Item ID =', lastItemId); 
             if (!lastItemId || newLastItemId > lastItemId) {
                 db.set(`last_item_id_${sub.id}`, newLastItemId);
             }
