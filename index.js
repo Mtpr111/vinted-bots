@@ -69,7 +69,7 @@ const syncSubscription = (sub) => {
             }
             const isFirstSync = db.get('is_first_sync');
             const lastItemTimestamp = db.get(`last_item_ts_${sub.id}`);
-            console.log(Vinted responded w/ ${res.items.lengths} search results:, res.items.map(el => el.title));
+            console.log(`Vinted responded w/ ${res.items.lengths} search results:`, res.items.map(el => el.title));
             const items = res.items
                 .sort((a, b) => new Date(b.created_at_ts).getTime() - new Date(a.created_at_ts).getTime())
                 .filter((item) => !lastItemTimestamp || new Date(item.created_at_ts) > lastItemTimestamp);
