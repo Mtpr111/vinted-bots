@@ -143,7 +143,7 @@ const sync = () => {
 client.on('ready', () => {
     console.log(`🔗 Connecté sur le compte de ${client.user.tag} !\n`);
 
-    const entries = db.all().filter((e) => e.key !== 'subscriptions' && !e.key.startsWith('last_item_ts'));
+    const entries = db.all().filter((e) => e.key !== 'subscriptions' && !e.key.startsWith('last_item_id'));
     entries.forEach((e) => {
         db.delete(e.key);
     });
@@ -172,7 +172,7 @@ client.on('interactionCreate', (interaction) => {
                 channelID: interaction.options.getChannel('channel').id
             }
             db.push('subscriptions', sub);
-            db.set(`last_item_ts_${sub.id}`, null);
+            db.set(`last_item_id_${sub.id}`, null);
             interaction.reply(`:white_check_mark: Votre abonnement a été créé avec succès !\n**URL**: <${sub.url}>\n**Salon**: <#${sub.channelID}>`);
             break;
         }
