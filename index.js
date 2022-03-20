@@ -68,20 +68,20 @@ const syncSubscription = (sub) => {
                 return;
             }
             const isFirstSync = db.get('is_first_sync');
-            const lastItemTimestamp = db.get(`last_item_ts_${sub.id}`);
+            const lastItemId = db.get(`last_item_id_${sub.id}`);
             console.log(sub.url,`Vinted responded w/ ${res.items.length} search results:`, res.items.map(el => el.title));
             const items = res.items
-                .sort((a, b) => new Date(b.created_at_ts).getTime() - new Date(a.created_at_ts).getTime())
-                .filter((item) => !lastItemTimestamp || new Date(item.created_at_ts) > lastItemTimestamp);
+                .sort((i1, i2) => i1.id - i2-id)
+                .filter((item) => !lastItemId || item.id > lastItemId);
 
             if (!items.length) return void resolve();
 
-            const newLastItemTimestamp = new Date(items[0].created_at_ts).getTime();
-            if (!lastItemTimestamp || newLastItemTimestamp > lastItemTimestamp) {
-                db.set(`last_item_ts_${sub.id}`, newLastItemTimestamp);
+            const newLastItemId  = items[0].id;
+            if (!lastItemId || newLastItemId > lastItemId) {
+                db.set(`last_item_id_${sub.id}`, newLastItemTimestamp);
             }
 
-            const itemsToSend = ((lastItemTimestamp && !isFirstSync) ? items.reverse() : [items[0]]);
+            const itemsToSend = ((lastItemId && !isFirstSync) ? items.reverse() : [items[0]]);
 
             for (let item of itemsToSend) {
                 let embed = new Discord.MessageEmbed()
