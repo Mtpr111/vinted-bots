@@ -71,7 +71,7 @@ const syncSubscription = (sub) => {
             const lastItemId = db.get(`last_item_id_${sub.id}`);
             console.log(sub.url,`Vinted responded w/ ${res.items.length} search results:`, res.items.map(el => el.title));
             const items = res.items
-                .sort((i1, i2) => i1.id - i2-id)
+                .sort((i1, i2) => i1.id - i2.id)
                 .filter((item) => !lastItemId || item.id > lastItemId);
 
             if (!items.length) return void resolve();
