@@ -152,7 +152,7 @@ client.on('ready', () => {
    
 
     sync();
-    const intervalSeconds = 60
+    const intervalSeconds = 5
     setInterval(sync, intervalSeconds * 1000);
 
     const { version } = require('./package.json');
