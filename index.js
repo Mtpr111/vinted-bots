@@ -78,7 +78,7 @@ const syncSubscription = (sub) => {
 
             const newLastItemId  = items[0].id;
             if (!lastItemId || newLastItemId > lastItemId) {
-                db.set(`last_item_id_${sub.id}`, newLastItemTimestamp);
+                db.set(`last_item_id_${sub.id}`, newLastItemId);
             }
 
             const itemsToSend = ((lastItemId && !isFirstSync) ? items.reverse() : [items[0]]);
