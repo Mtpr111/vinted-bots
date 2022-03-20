@@ -84,16 +84,18 @@ const syncSubscription = (sub) => {
             const itemsToSend = ((lastItemTimestamp && !isFirstSync) ? items.reverse() : [items[0]]);
 
             for (let item of itemsToSend) {
-                const embed = new Discord.MessageEmbed()
+                let embed = new Discord.MessageEmbed()
                     .setTitle(item.title)
                     .setURL(`https://www.vinted.fr${item.path}`)
-                    .setImage(item.photos[0]?.url)
                     .setColor('#008000')
                     .setTimestamp(item.createdTimestamp)
                     .setFooter(`Article lié à la recherche : ${sub.id}`)
                     .addField('Taille', item.size || 'vide', true)
                     .addField('Prix', item.price || 'vide', true)
                     .addField('Condition', item.status || 'vide', true);
+                if (item.photos.length) {
+                    embed = embed.setImage(item.photos[0].url)
+                }
                 client.channels.cache.get(sub.channelID)?.send({ embeds: [embed], components: [
                     new Discord.MessageActionRow()
                         .addComponents([
