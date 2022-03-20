@@ -70,21 +70,19 @@ const syncSubscription = (sub) => {
             const isFirstSync = db.get('is_first_sync');
             const lastItemId = db.get(`last_item_id_${sub.id}`);
             console.log(sub.url,`Vinted responded w/ ${res.items.length} search results:`);
-            console.log('items id', res.items.map(el => el.id)); 
+            console.log('items id', res.items.map(el => ({id: el.id, title: el.title}))); 
             const items = res.items
-                .sort((i1, i2) => i1.id - i2.id)
+                .sort((i1, i2) => i2.id - i1.id)
                 .filter((item) => !lastItemId || item.id > lastItemId);
 
             if (!items.length) return void resolve();
 
-            const itemsToSend = ((lastItemId && !isFirstSync) ? items.reverse() : [items[0]]);
-
-            console.log("DEBUG:", res.items[0])
-
-            const newLastItemId  = itemsToSend[itemsToSend.length - 1].id;
+            const newLastItemId  = items[0].id;
             if (!lastItemId || newLastItemId > lastItemId) {
                 db.set(`last_item_id_${sub.id}`, newLastItemId);
             }
+
+            const itemsToSend = ((lastItemId && !isFirstSync) ? items.reverse() : [items[0]]);
 
             for (let item of itemsToSend) {
                 let embed = new Discord.MessageEmbed()
@@ -154,7 +152,8 @@ client.on('ready', () => {
    
 
     sync();
-    setInterval(sync, 15000);
+    const intervalSeconds = 60
+    setInterval(sync, intervalSeconds * 1000);
 
     const { version } = require('./package.json');
     client.user.setActivity(`Vinted BOT | v${version}`);
